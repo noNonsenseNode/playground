@@ -1,0 +1,11 @@
+playground:
+  build: ./
+  dockerFile: docker
+  ports:
+    - "80:80"
+    - "8080:8080"
+  volumes:
+    - ./:/srv
+  command: /bin/bash /srv/ops/local/main.sh
+  extra_hosts:
+    - "playground.dev:127.0.0.1"

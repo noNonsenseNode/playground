@@ -1,0 +1,14 @@
+FROM ubuntu
+ENV TERM xterm
+
+RUN mkdir -p /srv
+WORKDIR /srv
+COPY ./ ./
+
+RUN apt-get install curl wget build-essential
+RUN wget -O /usr/local/src/node-v4.4.5-linux-x64.tar.xz https://nodejs.org/dist/v4.4.5/node-v4.4.5-linux-x64.tar.xz
+RUN tar -C /usr/local --strip-components 1 -xzf /usr/local/srv/node-v4.4.5-linux-x64.tar.xz
+RUN npm install -g forever gulp node-inspector
+
+EXPOSE 80
+EXPOSE 8080

@@ -1,15 +1,14 @@
 #!/bin/bash
 
-SERVICE=playground
-DNS=playground.dev
-COMPOSE_FILE=./docker-compose.yml
+SERVICE="playground"
+DNS="playground.dev"
+COMPOSE_FILE="docker-compose.yml"
 
 setupMachine () {
-
-    if ["$(which docker-machine)" == "" ]; then
+    if [ "$(which docker-machine)" == "" ]; then
         echo "please install docker machine"
         exit
-    elif [ "$(docker-machine ls) | grep $SERVICE" = "" ]; then
+    elif [ "$(docker-machine ls | grep $SERVICE)" == "" ]; then
         echo "creating docker-machine $SERVICE"
         docker-machine create -d virtualbox --virtualbox-cpu-count "2" --virtualbox-memory "2048" --virtualbox-disk-size "20000" $SERVICE
     fi;
@@ -49,8 +48,8 @@ if [ "$1" == "setup" ]; then
     setDNS;
     init;
     compose;
-    /usr/bin/open -a "/Applications/Google Chrome.app" "http://$DSN/"
-    /usr/bin/open -a "/Applications/Google Chrome.app" "http://$DSN:8080/debug?port=4001"
+    /usr/bin/open -a "/Applications/Google Chrome.app" "http://$DNS/"
+    /usr/bin/open -a "/Applications/Google Chrome.app" "http://$DNS:8080/debug?port=4001"
 elif [ "$1" == "destroy" ]; then
     removeDNS;
     init;

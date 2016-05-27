@@ -1,6 +1,6 @@
 playground:
   build: ./
-  dockerFile: docker
+  dockerfile: docker
   ports:
     - "80:80"
     - "8080:8080"

@@ -5,9 +5,10 @@ RUN mkdir -p /srv
 WORKDIR /srv
 COPY ./ ./
 
-RUN apt-get install curl wget build-essential
-RUN wget -O /usr/local/src/node-v4.4.5-linux-x64.tar.xz https://nodejs.org/dist/v4.4.5/node-v4.4.5-linux-x64.tar.xz
-RUN tar -C /usr/local --strip-components 1 -xzf /usr/local/srv/node-v4.4.5-linux-x64.tar.xz
+RUN apt-get -y update
+RUN apt-get -y install curl wget build-essential
+RUN wget -O /usr/local/src/node-v4.4.5-linux-x64.tar.gz http://nodejs.org/dist/v4.4.5/node-v4.4.5-linux-x64.tar.gz
+RUN tar -C /usr/local --strip-components 1 -xzf /usr/local/src/node-v4.4.5-linux-x64.tar.gz
 RUN npm install -g forever gulp node-inspector
 
 EXPOSE 80

@@ -64,6 +64,9 @@ If($Args[0] -eq "setup") {
 } ElseIf($Args[0] -eq "shell") {
     init;
     docker exec -it $(docker-compose -f $COMPOSE_FILE ps -q playground) /bin/bash -c "cd /srv;/bin/bash"
+} ElseIf($Args[0] -eq "restart") {
+    init;
+    docker exec -it $(docker-compose -f $COMPOSE_FILE ps -q playground) /bin/bash -c "cd /srv;forever restartall;"
 } Else {
     echo "invalid run command"
 }

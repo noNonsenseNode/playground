@@ -57,6 +57,9 @@ elif [ "$1" == "destroy" ]; then
     destroyMachine;
 elif [ "$1" == "shell" ]; then
     docker exec -it $(docker-compose -f $COMPOSE_FILE ps -q playground) bash -c "cd /srv;/bin/bash"
+elif [ "$1" == "restart" ]; then
+    init;
+    docker exec -it $(docker-compose -f $COMPOSE_FILE ps -q playground) bash -c "cd /srv;forever restartall;"
 else
     echo "invalid command"
 fi

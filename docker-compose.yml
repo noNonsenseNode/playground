@@ -9,3 +9,12 @@ playground:
   command: /bin/bash /srv/ops/local/main.sh
   extra_hosts:
     - "playground.dev:127.0.0.1"
+  links:
+    - dbserver
+
+dbserver:
+  image: mysql
+  ports:
+    - "3306:3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: root

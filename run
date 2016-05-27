@@ -1,0 +1,63 @@
+#!/bin/bash
+
+SERVICE=playground
+DNS=playground.dev
+COMPOSE_FILE=./docker-compose.yml
+
+setupMachine () {
+
+    if ["$(which docker-machine)" == "" ]; then
+        echo "please install docker machine"
+        exit
+    elif [ "$(docker-machine ls) | grep $SERVICE" = "" ]; then
+        echo "creating docker-machine $SERVICE"
+        docker-machine create -d virtualbox --virtualbox-cpu-count "2" --virtualbox-memory "2048" --virtualbox-disk-size "20000" $SERVICE
+    fi;
+}
+
+init () {
+    eval "$(docker-machine env $SERVICE)"
+}
+
+destroyMachine () {
+    init;
+    docker-machine rm $SERVICE
+}
+
+setDNS () {
+    ip=$(docker-machine ip $SERVICE);
+    if grep -Fxq "$ip $DNS" /etc/hosts; then
+        echo "$ip $DNS already in host file"
+    else
+        echo "$ip $DNS" | sudo tee -a /etc/hosts > /dev/null;
+    fi;
+}
+
+removeDNS () {
+    sudo sed -i .bak '/playground/d' /etc/hosts
+}
+
+compose () {
+    docker-compose -f $COMPOSE_FILE build
+    docker-compose -f $COMPOSE_FILE up -d
+    docker-compose -f $COMPOSE_FILE ps
+    docker-compose -f $COMPOSE_FILE rm -f
+}
+
+if [ "$1" == "setup" ]; then
+    setupMachine;
+    setDNS;
+    init;
+    compose;
+    /usr/bin/open -a "/Applications/Google Chrome.app" "http://$DSN/"
+    /usr/bin/open -a "/Applications/Google Chrome.app" "http://$DSN:8080/debug?port=4001"
+elif [ "$1" == "destroy" ]; then
+    removeDNS;
+    init;
+    docker-compose -f $COMPOSE_FILE kill -s SIGINT
+    destroyMachine;
+elif [ "$1" == "shell" ]; then
+    docker exec -it $(docker-compose -f $COMPOSE_FILE ps -q playground) bash -c "cd /srv;/bin/bash"
+else
+    echo "invalid command"
+fi

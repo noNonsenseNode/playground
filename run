@@ -40,7 +40,7 @@ compose () {
     docker-compose -f $COMPOSE_FILE build
     docker-compose -f $COMPOSE_FILE up -d
     docker-compose -f $COMPOSE_FILE ps
-    docker-compose -f $COMPOSE_FILE rm -f
+    docker-compose -f $COMPOSE_FILE rm --all
 }
 
 if [ "$1" == "setup" ]; then
@@ -56,10 +56,11 @@ elif [ "$1" == "destroy" ]; then
     docker-compose -f $COMPOSE_FILE kill -s SIGINT
     destroyMachine;
 elif [ "$1" == "shell" ]; then
-    docker exec -it $(docker-compose -f $COMPOSE_FILE ps -q playground) bash -c "cd /srv;/bin/bash"
+    init;
+    docker exec -it $(docker-compose -f $COMPOSE_FILE ps -q playground) bash -c "cd /srv;/bin/bash;"
 elif [ "$1" == "restart" ]; then
     init;
-    docker exec -it $(docker-compose -f $COMPOSE_FILE ps -q playground) bash -c "cd /srv;forever restartall;"
+    docker exec -it $(docker-compose -f $COMPOSE_FILE ps -q playground) bash -c "cd /srv;pushd ./database;db-migrate up;popd;forever restartall;"
 else
     echo "invalid command"
 fi

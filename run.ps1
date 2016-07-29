@@ -54,8 +54,8 @@ If($Args[0] -eq "setup") {
     setupDNS;
     init;
     compose;
-    Start-Process "chrome.exe" "https://$DNS/"
-    Start-Process "chrome.exe" "https://$DNS:8080/debug?port=4001"
+    Start-Process "chrome.exe" "http://$DNS/"
+    Start-Process "chrome.exe" "http://$DNS:8080/debug?port=4001"
 } ElseIf($Args[0] -eq "destroy") {
     removeDNS;
     init;

@@ -27,6 +27,7 @@ Open git bash, git clone
 Open powershell as administrator
 cd into project
 ```
+Set-ExecutionPolicy unrestricted
 ./run.ps1 setup
 ```
 use run.ps1 instead of run for all scripts
